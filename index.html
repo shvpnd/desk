@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>shvpnd's desk</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" type="image/x-icon" href="img.png">
+
+</head>
+
+<body>
+  <div class="page-container">
+    <div class="header">
+      <h2>shvpnd gotta learn heh?</h2>
+      <img src="img.png" class="displayed" width="400px" align="right" />
+      <p id="datetime"></p>
+      <script>
+        function updateDateTime() {
+          var now = new Date();
+          var datetimeElement = document.getElementById('datetime');
+          datetimeElement.innerHTML = now.toLocaleString();
+        }
+        setInterval(updateDateTime, 1000);
+      </script>
+      <div class="description">
+        <p>the riemann zeta function or euler–riemann zeta function, is a function of a complex variable s that
+          analytically continues the sum of the dirichlet series :\zeta =\sum_{n=1}^\infty\rac{1}{n^s} which converges
+          when the real part of is greater than 1. more general representations of for all are given below. the riemann
+          zeta function plays a pivotal role in analytic number theory and has applications in physics, probability
+          theory, and applied statistics</p>
+      </div>
+      <div class="instructions">
+        <p>i simp hard for the gojo's female version</p>
+        <p>
+          <a href="http://github.com" target="_blank">github</a>
+          <a href="http://leetcode.com" target="_blank">leetcode</a>
+          <a href="https://roadmap.sh/computer-science" target="_blank">roadmap</a>
+          <a href="http://libgen.rs" target="_blank">books</a>
+          <a href="https://reddit.com/r/GetStudying/" target="_blank">reddit</a>
+          <a href="https://nerdbear.com/wp-content/uploads/2022/03/Shrek.jpg" target="_blank">boost</a>
+          <a href="https://anime.j21.dev" target="_blank">anime</a>
+		<a href="https://duckduckgo.com/lite" target="_blank">ddg</a>
+        </p>
+      </div>
+    </div>
+    <h3>animedoro</h3>
+    <div id="timer">65:00</div>
+    <button onclick="startTimer()">start</button>
+    <audio id="alarm" src="alarm.mp3"></audio>
+    <script>
+      let timer;
+      let timeLeft = 3900;
+      function startTimer() {
+        clearInterval(timer);
+        timeLeft = 3900;
+        timer = setInterval(updateTimer, 1000);
+      }
+      function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          document.getElementById('timer').innerHTML = '00:00';
+          document.getElementById('alarm').play();
+        } else {
+          document.getElementById('timer').innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          timeLeft--;
+        }
+      }
+    </script>
+    <h3>to-do list</h3>
+    <input type="text" id="task-input" placeholder="yowai mo">
+    <button id="add-task-btn">add</button>
+    <h3>pending</h3>
+    <ul id="pending-tasks"></ul>
+    <h3>completed</h3>
+    <ul id="completed-tasks"></ul>
+    <script> //this
+      let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      document.getElementById('add-task-btn').addEventListener('click', addTask);
+      function addTask() {
+        const taskInput = document.getElementById('task-input');
+        const taskText = taskInput.value.trim();
+        if (taskText !== '') {
+          tasks.push({ text: taskText, completed: false });
+          taskInput.value = '';
+          saveTasks();
+          loadTasks();
+        }
+      }
+      function toggleTaskCompletion(taskText) {
+        const task = tasks.find(t => t.text === taskText);
+        task.completed = !task.completed;
+        saveTasks();
+        loadTasks();
+      }
+      function deleteTask(taskText) {
+        tasks = tasks.filter(t => t.text !== taskText);
+        saveTasks();
+        loadTasks();
+      }
+      function editTask(taskText) {
+        const task = tasks.find(t => t.text === taskText);
+        const newText = prompt('get to work you lousy bum:', task.text);
+        if (newText !== null && newText.trim() !== '') {
+          task.text = newText.trim();
+          saveTasks();
+          loadTasks();
+        }
+      }
+      function addTaskToList(task, listId) {
+        const taskList = document.getElementById(listId);
+        const taskItem = document.createElement('li');
+        taskItem.textContent = task.text;
+        if (task.completed) {
+          taskItem.classList.add('completed');
+        }
+        const completeButton = document.createElement('button');
+        completeButton.textContent = task.completed ? 'undo' : 'comp';
+        completeButton.onclick = () => toggleTaskCompletion(task.text);
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'del';
+        deleteButton.onclick = () => deleteTask(task.text);
+        const editButton = document.createElement('button');
+        editButton.textContent = 'edit';
+        editButton.onclick = () => editTask(task.text);
+        taskItem.appendChild(completeButton);
+        taskItem.appendChild(deleteButton);
+        taskItem.appendChild(editButton);
+        taskList.appendChild(taskItem);
+      }
+      function saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      }
+      function loadTasks() {
+        const pendingTasksList = document.getElementById('pending-tasks');
+        const completedTasksList = document.getElementById('completed-tasks');
+        pendingTasksList.innerHTML = '';
+        completedTasksList.innerHTML = '';
+        tasks.forEach(task => {
+          addTaskToList(task, task.completed ? 'completed-tasks' : 'pending-tasks');
+        });
+      }
+      loadTasks();
+    </script>
+<h3>planner (yowai mo)</h3>
+<div class="planner">
+  <div class="day">
+    <h3>sun</h3>
+    <textarea id="sunday-events"></textarea>
+  </div>
+  <div class="day">
+    <h3>mon</h3>
+    <textarea id="monday-events"></textarea>
+  </div>
+  <div class="day">
+    <h3>tue</h3>
+    <textarea id="tuesday-events"></textarea>
+  </div>
+  <div class="day">
+    <h3>wed</h3>
+    <textarea id="wednesday-events"></textarea>
+  </div>
+  <div class="day">
+    <h3>thu</h3>
+    <textarea id="thursday-events"></textarea>
+  </div>
+  <div class="day">
+    <h3>fri</h3>
+    <textarea id="friday-events"></textarea>
+  </div>
+  <div class="day">
+    <h3>sat</h3>
+    <textarea id="saturday-events"></textarea>
+  </div>
+</div>
+<button onclick="saveAllEvents()">Save</button>
+  <script>
+   function loadEvents() {
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  days.forEach(day => {
+    const eventElement = document.getElementById(`${day}-events`);
+    const savedEvents = localStorage.getItem(`${day}-events`);
+    eventElement.value = savedEvents || '';
+  });
+}
+function saveAllEvents() {
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  days.forEach(day => {
+    const eventElement = document.getElementById(`${day}-events`);
+    localStorage.setItem(`${day}-events`, eventElement.value);
+  });
+}
+loadEvents();
+  </script>
+</body>
+</html
+
+
+
